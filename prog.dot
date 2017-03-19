@@ -1,0 +1,129 @@
+digraph G {
+//    1: .function video_orc_convert_I420_BGRA
+//    2: .dest 4 argb guint8
+  declare_argb [shape=box,label="argb (.dest)",style="filled",fillcolor="#f4a582"];
+//    3: .source 1 y guint8
+  declare_y [shape=box,label="y (.source)",style="filled",fillcolor="#c7e9c0"];
+//    4: .source 1 u guint8
+  declare_u [shape=box,label="u (.source)",style="filled",fillcolor="#c7e9c0"];
+//    5: .source 1 v guint8
+  declare_v [shape=box,label="v (.source)",style="filled",fillcolor="#c7e9c0"];
+//    6: //        data->im[0][0], data->im[0][2],
+//    7: //        data->im[2][1], data->im[1][1], data->im[1][2], width);
+//    8: //   p1     p2
+//    9: // [    p4  p5 ]
+//   10: //      p3
+//   11: .param 2 p1  // im[0][0]
+  declare_p1 [shape=box,label="p1 (.param)",style="filled",fillcolor="#bdd7e7"];
+//   12: .param 2 p2  // im[0][2]
+  declare_p2 [shape=box,label="p2 (.param)",style="filled",fillcolor="#bdd7e7"];
+//   13: .param 2 p3  // im[2][1]
+  declare_p3 [shape=box,label="p3 (.param)",style="filled",fillcolor="#bdd7e7"];
+//   14: .param 2 p4  // im[1][1]
+  declare_p4 [shape=box,label="p4 (.param)",style="filled",fillcolor="#bdd7e7"];
+//   15: .param 2 p5  // im[1][2]
+  declare_p5 [shape=box,label="p5 (.param)",style="filled",fillcolor="#bdd7e7"];
+//   16: .temp 2 wy
+//   17: .temp 2 wu
+//   18: .temp 2 wv
+//   19: .temp 2 wr
+//   20: .temp 2 wg
+//   21: .temp 2 wb
+//   22: .temp 1 r
+//   23: .temp 1 g
+//   24: .temp 1 b
+//   25: .temp 4 x
+//   26: .const 1 c128 128
+  declare_c128 [shape=box,label="128 (.const c128)",style="filled",fillcolor="#f0f0f0"];
+//   27: .const 4 c4128 128
+  declare_c4128 [shape=box,label="128 (.const c4128)",style="filled",fillcolor="#f0f0f0"];
+//   29: subb r, y, c128
+  opcode_29 [label="subb"];
+    declare_y -> opcode_29 [label="y",penwidth=1];
+    declare_c128 -> opcode_29 [label="c128",penwidth=1];
+//   30: splatbw wy, r
+  opcode_30 [label="splatbw"];
+  opcode_29 -> opcode_30 [label="r",penwidth=1];
+//   31: loadupdb r, u
+  opcode_31 [label="loadupdb"];
+    declare_u -> opcode_31 [label="u",penwidth=1];
+//   32: subb r, r, c128
+  opcode_32 [label="subb"];
+  opcode_31 -> opcode_32 [label="r",penwidth=1];
+    declare_c128 -> opcode_32 [label="c128",penwidth=1];
+//   33: splatbw wu, r
+  opcode_33 [label="splatbw"];
+  opcode_32 -> opcode_33 [label="r",penwidth=1];
+//   34: loadupdb r, v
+  opcode_34 [label="loadupdb"];
+    declare_v -> opcode_34 [label="v",penwidth=1];
+//   35: subb r, r, c128
+  opcode_35 [label="subb"];
+  opcode_34 -> opcode_35 [label="r",penwidth=1];
+    declare_c128 -> opcode_35 [label="c128",penwidth=1];
+//   36: splatbw wv, r
+  opcode_36 [label="splatbw"];
+  opcode_35 -> opcode_36 [label="r",penwidth=1];
+//   38: mulhsw wy, wy, p1
+  opcode_38 [label="mulhsw"];
+  opcode_30 -> opcode_38 [label="wy",penwidth=2];
+    declare_p1 -> opcode_38 [label="p1",penwidth=2];
+//   40: mulhsw wr, wv, p2
+  opcode_40 [label="mulhsw"];
+  opcode_36 -> opcode_40 [label="wv",penwidth=2];
+    declare_p2 -> opcode_40 [label="p2",penwidth=2];
+//   41: addw wr, wy, wr
+  opcode_41 [label="addw"];
+  opcode_38 -> opcode_41 [label="wy",penwidth=2];
+  opcode_40 -> opcode_41 [label="wr",penwidth=2];
+//   42: convssswb r, wr
+  opcode_42 [label="convssswb"];
+  opcode_41 -> opcode_42 [label="wr",penwidth=2];
+//   43: mergebw wr, r, 127
+  opcode_43 [label="mergebw"];
+  opcode_42 -> opcode_43 [label="r",penwidth=1];
+  literal_127 [shape=box,style="filled",fillcolor="#f0f0f0",label="127 (literal)"];  literal_127 -> opcode_43 [label="127",penwidth=1];
+//   45: mulhsw wb, wu, p3
+  opcode_45 [label="mulhsw"];
+  opcode_33 -> opcode_45 [label="wu",penwidth=2];
+    declare_p3 -> opcode_45 [label="p3",penwidth=2];
+//   46: addw wb, wy, wb
+  opcode_46 [label="addw"];
+  opcode_38 -> opcode_46 [label="wy",penwidth=2];
+  opcode_45 -> opcode_46 [label="wb",penwidth=2];
+//   47: convssswb b, wb
+  opcode_47 [label="convssswb"];
+  opcode_46 -> opcode_47 [label="wb",penwidth=2];
+//   49: mulhsw wg, wu, p4
+  opcode_49 [label="mulhsw"];
+  opcode_33 -> opcode_49 [label="wu",penwidth=2];
+    declare_p4 -> opcode_49 [label="p4",penwidth=2];
+//   50: addw wg, wy, wg
+  opcode_50 [label="addw"];
+  opcode_38 -> opcode_50 [label="wy",penwidth=2];
+  opcode_49 -> opcode_50 [label="wg",penwidth=2];
+//   51: mulhsw wy, wv, p5
+  opcode_51 [label="mulhsw"];
+  opcode_36 -> opcode_51 [label="wv",penwidth=2];
+    declare_p5 -> opcode_51 [label="p5",penwidth=2];
+//   52: addw wg, wg, wy
+  opcode_52 [label="addw"];
+  opcode_50 -> opcode_52 [label="wg",penwidth=2];
+  opcode_51 -> opcode_52 [label="wy",penwidth=2];
+//   54: convssswb g, wg
+  opcode_54 [label="convssswb"];
+  opcode_52 -> opcode_54 [label="wg",penwidth=2];
+//   56: mergebw wb, b, g
+  opcode_56 [label="mergebw"];
+  opcode_47 -> opcode_56 [label="b",penwidth=1];
+  opcode_54 -> opcode_56 [label="g",penwidth=1];
+//   57: mergewl x, wb, wr
+  opcode_57 [label="mergewl"];
+  opcode_56 -> opcode_57 [label="wb",penwidth=2];
+  opcode_43 -> opcode_57 [label="wr",penwidth=2];
+//   58: x4 addb argb, x, c4128
+  opcode_58 [label="addb"];
+  opcode_57 -> opcode_58 [label="x",penwidth=4];
+    declare_c4128 -> opcode_58 [label="c4128",penwidth=4];
+  opcode_58 -> declare_argb [label="argb",penwidth=4];
+}
